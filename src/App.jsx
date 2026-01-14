@@ -16,6 +16,9 @@ import {
   RefreshCw
 } from 'lucide-react';
 
+// Import WalletInfo component to display wallet connection and balances
+import WalletInfo from './WalletInfo.jsx';
+
 // --- Constants & Initial Data ---
 
 const SKR_LAUNCH_DATE = new Date('2026-01-21T00:00:00Z');
@@ -470,6 +473,8 @@ export default function App() {
           </div>
           {/* Right Column: Main Content */}
           <div className="lg:col-span-2 order-1 lg:order-2 space-y-8">
+            {/* Wallet information */}
+            <WalletInfo />
             <CountdownCard />
             <div>
               <LiveChart activeToken={activeToken} />
