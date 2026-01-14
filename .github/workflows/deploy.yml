@@ -22,8 +22,11 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - name: Upload artifac
-        uses: actions/upload-pages-artifact@v2
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
@@ -39,4 +42,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
