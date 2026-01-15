@@ -399,8 +399,10 @@ const AppContent = () => {
 
 // Root Component with Providers
 export default function App() {
-  // Use Mainnet-beta for production, or Devnet for testing
-  const network = WalletAdapterNetwork.Devnet;
+  // Select the Solana cluster to connect to.  Use Mainnet for production
+  // or Devnet for testing.  The wallet adapter will connect to the
+  // appropriate cluster based on this value.
+  const network = WalletAdapterNetwork.Mainnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
   const wallets = useMemo(() => [
