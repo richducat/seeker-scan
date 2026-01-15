@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+// Import node polyfills plugin to provide built‑in Node modules (Buffer, process, crypto, etc.)
+// in the browser environment. Without these polyfills, libraries such as
+// @solana/web3.js and wallet adapters will fail at runtime when bundled with Vite.
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 // Vite configuration for the SeekerScan dApp. This config enables React
 // support and adds the PWA plugin which will generate a service worker and
@@ -12,6 +16,9 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
   plugins: [
     react(),
+    // Enable Node.js core module polyfills. The plugin must come before any
+    // other plugins that rely on Node built‑ins (such as wallet adapters).
+    nodePolyfills(),
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
