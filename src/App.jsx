@@ -18,92 +18,28 @@ import {
 
 // ==========================================
 // FOR DEVELOPER: PRODUCTION IMPORTS
-// Uncomment these lines below and remove the "PREVIEW SHIM" section to go live.
+// The following imports enable real Solana wallet support.  The preview shim
+// defined below was intended for environments without access to the wallet
+// adapter packages.  To allow real wallets to connect, the shim has been
+// removed and these imports are now active.
 // ==========================================
 
-/*
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider, useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { 
+import {
     PhantomWalletAdapter,
     SolflareWalletAdapter,
     TorusWalletAdapter,
-    LedgerWalletAdapter
+    LedgerWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 
 // Default styles for the wallet adapter
 import '@solana/wallet-adapter-react-ui/styles.css';
-*/
 
 // ==========================================
-// PREVIEW SHIM (Temporary for this environment)
-// This allows the UI to render without crashing due to missing dependencies.
-// ==========================================
-
-const WalletAdapterNetwork = { Devnet: 'devnet' };
-const clusterApiUrl = () => "https://api.devnet.solana.com";
-const Connection = class {};
-const PhantomWalletAdapter = class {};
-const SolflareWalletAdapter = class {};
-const TorusWalletAdapter = class {};
-const LedgerWalletAdapter = class {};
-
-// Mock Context for Preview
-const MockWalletContext = createContext({
-  connected: false,
-  publicKey: null,
-  connect: () => {},
-  disconnect: () => {},
-  sendTransaction: async () => {},
-});
-
-const ConnectionProvider = ({ children }) => <>{children}</>;
-const WalletProvider = ({ children }) => {
-    // Simple state to simulate connection in preview
-    const [connected, setConnected] = useState(false);
-    const [publicKey, setPublicKey] = useState(null);
-
-    const connect = () => {
-        setConnected(true);
-        // Mock Public Key
-        setPublicKey({ toString: () => "9o77AkThGHNhNDeowM943dNsCck71VTUeFwBxq3RaGjn" });
-    };
-    const disconnect = () => {
-        setConnected(false);
-        setPublicKey(null);
-    };
-
-    return (
-        <MockWalletContext.Provider value={{ connected, publicKey, connect, disconnect }}>
-            {children}
-        </MockWalletContext.Provider>
-    );
-};
-const WalletModalProvider = ({ children }) => <>{children}</>;
-const useWallet = () => useContext(MockWalletContext);
-const useConnection = () => ({ connection: { rpcEndpoint: "https://api.devnet.solana.com" } });
-
-const WalletMultiButton = ({ className }) => {
-    const { connected, connect, disconnect, publicKey } = useWallet();
-    return (
-        <button 
-            onClick={connected ? disconnect : connect}
-            className={className || "bg-[#1E2025] text-white px-4 py-2 rounded-full"}
-        >
-            {connected ? (
-                <span className="flex items-center gap-2">
-                     <div className="w-2 h-2 rounded-full bg-[#05B169] animate-pulse"></div>
-                     {publicKey?.toString().slice(0,4)}...
-                </span>
-            ) : "Select Wallet"}
-        </button>
-    )
-}
-
-// ==========================================
-// END PREVIEW SHIM
+// PREVIEW SHIM REMOVED
 // ==========================================
 
 // --- Constants ---
