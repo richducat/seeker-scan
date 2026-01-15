@@ -45,6 +45,25 @@ export default defineConfig({
       }
     })
   ],
+  // Define global variables expected by some node‑based libraries. Without
+  // this, modules that reference `global` may throw at runtime. Set `global`
+  // to `globalThis` which is available in all modern browsers.
+  define: {
+    global: 'globalThis'
+  },
+  // Provide aliases for node built‑in modules. Here we alias `buffer` to
+  // the `buffer` package installed via polyfill plugin. This helps Vite
+  // resolve Buffer usage in @solana/web3.js and other dependencies.
+  resolve: {
+    alias: {
+      buffer: 'buffer/'
+    }
+  },
+  // Include Buffer polyfill during dependency optimization so that it is
+  // available when dependencies are pre-bundled.
+  optimizeDeps: {
+    include: ['buffer']
+  },
   server: {
     port: 5173,
     open: true
