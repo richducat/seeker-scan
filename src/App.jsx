@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, createContext, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { 
   Twitter, 
@@ -24,16 +24,8 @@ import {
 // removed and these imports are now active.
 // ==========================================
 
-import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { ConnectionProvider, WalletProvider, useWallet, useConnection } from '@solana/wallet-adapter-react';
-import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import {
-    PhantomWalletAdapter,
-    SolflareWalletAdapter,
-    TorusWalletAdapter,
-    LedgerWalletAdapter,
-} from '@solana/wallet-adapter-wallets';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 // Default styles for the wallet adapter
 import '@solana/wallet-adapter-react-ui/styles.css';
@@ -399,26 +391,5 @@ const AppContent = () => {
 
 // Root Component with Providers
 export default function App() {
-  // Select the Solana cluster to connect to.  Use Mainnet for production
-  // or Devnet for testing.  The wallet adapter will connect to the
-  // appropriate cluster based on this value.
-  const network = WalletAdapterNetwork.Mainnet;
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
-  const wallets = useMemo(() => [
-    new PhantomWalletAdapter(),
-    new SolflareWalletAdapter(),
-    new TorusWalletAdapter(),
-    new LedgerWalletAdapter(),
-  ], [network]);
-
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          <AppContent />
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
-  );
+  return <AppContent />;
 }
