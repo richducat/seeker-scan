@@ -27,7 +27,7 @@
     "postcss": "^8.4.21",
     "autoprefixer": "^10.4.14",
     "vite-plugin-pwa": "^0.17.2",
-    "buffer": "^6.0.3"
-    "vite-plugin-node-polyfills": "^0.24.0""
-  
+    "buffer": "^6.0.3",
+    "vite-plugin-node-polyfills": "^0.24.0"
+  }
 }
