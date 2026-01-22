@@ -29,20 +29,34 @@ function AppProviders({ children }) {
   const appIdentity = useMemo(
     () => ({
       name: 'SeekerScan',
-      uri: window.location.origin,
-      icon: `${window.location.origin}/pwa-icon-192.png`,
+      uri: typeof window === 'undefined' ? '' : window.location.origin,
+      icon: typeof window === 'undefined' ? '' : `${window.location.origin}/pwa-icon-192.png`,
     }),
     []
   );
 
   const wallets = useMemo(
-    () => [
-      new SolanaMobileWalletAdapter({ appIdentity }),
-      new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
-      new TorusWalletAdapter(),
-      new LedgerWalletAdapter(),
-    ],
+    () => {
+      const configuredWallets = [];
+      const addWallet = (label, factory) => {
+        try {
+          const wallet = factory();
+          if (wallet) {
+            configuredWallets.push(wallet);
+          }
+        } catch (error) {
+          console.warn(`Wallet adapter "${label}" failed to initialize`, error);
+        }
+      };
+
+      addWallet('SolanaMobile', () => new SolanaMobileWalletAdapter({ appIdentity }));
+      addWallet('Phantom', () => new PhantomWalletAdapter());
+      addWallet('Solflare', () => new SolflareWalletAdapter());
+      addWallet('Torus', () => new TorusWalletAdapter());
+      addWallet('Ledger', () => new LedgerWalletAdapter());
+
+      return configuredWallets;
+    },
     [appIdentity]
   );
 
