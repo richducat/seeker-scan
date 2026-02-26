@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base=/seeker-scan/",
+    "build": "vite build",
+    "build:pages": "VITE_BASE_PATH=/seeker-scan/ vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -19,7 +20,7 @@
     "@solana/wallet-adapter-react-ui": "^0.9.16",
     "@solana/wallet-adapter-wallets": "^0.18.2",
     "@solana-mobile/wallet-adapter-mobile": "^2.0.5",
-            "@project-serum/anchor": "^0.26.0"
+    "@project-serum/anchor": "^0.26.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",

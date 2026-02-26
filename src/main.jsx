@@ -15,6 +15,13 @@ import {
 } from '@solana/wallet-adapter-wallets';
 import { SolanaMobileWalletAdapter } from '@solana-mobile/wallet-adapter-mobile';
 
+const NETWORK_BY_ENV = {
+  mainnet: WalletAdapterNetwork.Mainnet,
+  'mainnet-beta': WalletAdapterNetwork.Mainnet,
+  devnet: WalletAdapterNetwork.Devnet,
+  testnet: WalletAdapterNetwork.Testnet,
+};
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AppProviders>
@@ -24,16 +31,22 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 );
 
 function AppProviders({ children }) {
-  const network = WalletAdapterNetwork.Mainnet;
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const configuredNetwork = (import.meta.env.VITE_SOLANA_NETWORK || 'mainnet-beta').toLowerCase();
+  const network = NETWORK_BY_ENV[configuredNetwork] || WalletAdapterNetwork.Mainnet;
+  const endpoint = useMemo(
+    () => (import.meta.env.VITE_SOLANA_RPC_ENDPOINT || '').trim() || clusterApiUrl(network),
+    [network]
+  );
   const appIdentity = useMemo(
     () => ({
       name: 'SeekerScan',
       uri: typeof window === 'undefined' ? '' : window.location.origin,
-      icon: typeof window === 'undefined' ? '' : `${window.location.origin}/pwa-icon-192.png`,
+      icon: typeof window === 'undefined' ? '' : new URL('/pwa-icon-192.png', window.location.origin).toString(),
     }),
     []
   );
+  const isMobileBrowser =
+    typeof navigator !== 'undefined' && /android|iphone|ipad|ipod/i.test(navigator.userAgent);
 
   const wallets = useMemo(
     () => {
@@ -53,11 +66,13 @@ function AppProviders({ children }) {
       addWallet('Phantom', () => new PhantomWalletAdapter());
       addWallet('Solflare', () => new SolflareWalletAdapter());
       addWallet('Torus', () => new TorusWalletAdapter());
-      addWallet('Ledger', () => new LedgerWalletAdapter());
+      if (!isMobileBrowser) {
+        addWallet('Ledger', () => new LedgerWalletAdapter());
+      }
 
       return configuredWallets;
     },
-    [appIdentity]
+    [appIdentity, isMobileBrowser]
   );
 
   return (
