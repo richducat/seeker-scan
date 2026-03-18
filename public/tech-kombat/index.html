@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Tech Kombat</title>
+    <style>
+      :root {
+        --bg-dark: #020512;
+        --frame: #0f1730;
+        --frame-accent: #2fc9ff;
+        --panel: rgba(2, 10, 26, 0.88);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background: radial-gradient(circle at 50% 18%, #11295f 0%, var(--bg-dark) 62%);
+        color: #f2f7ff;
+        font-family: "Courier New", Courier, monospace;
+        touch-action: pinch-zoom;
+      }
+
+      body {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0.75rem;
+        padding:
+          max(0.75rem, env(safe-area-inset-top))
+          max(0.75rem, env(safe-area-inset-right))
+          max(1rem, env(safe-area-inset-bottom))
+          max(0.75rem, env(safe-area-inset-left));
+      }
+
+      #cabinet {
+        width: min(100%, 1240px);
+        border: 8px solid #121827;
+        border-radius: 18px;
+        background: linear-gradient(160deg, #1d2338 0%, #090d1f 100%);
+        box-shadow: 0 0 0 3px #263152, 0 18px 48px rgba(0, 0, 0, 0.65);
+        padding: 0.9rem;
+      }
+
+      canvas {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        display: block;
+        border: 4px solid var(--frame);
+        border-radius: 10px;
+        image-rendering: pixelated;
+        background: #030813;
+        touch-action: pinch-zoom;
+      }
+
+      #cabinet:fullscreen {
+        width: 100vw;
+        height: 100vh;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+      }
+
+      #cabinet:fullscreen canvas {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+      }
+
+      #mobile-controls {
+        display: none;
+        width: min(100%, 960px);
+        background: var(--panel);
+        border: 3px solid #254470;
+        border-radius: 18px;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        padding: 0.8rem;
+        gap: 0.8rem;
+      }
+
+      #mobile-hint {
+        margin: 0;
+        color: #9ee8ff;
+        font-size: 0.95rem;
+        line-height: 1.35;
+        text-align: center;
+      }
+
+      #mobile-clusters {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.8rem;
+      }
+
+      .control-group {
+        display: grid;
+        gap: 0.65rem;
+      }
+
+      #movement-group {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      #action-group {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #utility-group {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .control-btn {
+        min-height: 64px;
+        border: 2px solid #2a4f81;
+        border-radius: 16px;
+        background: linear-gradient(180deg, #143668 0%, #0a1f3d 100%);
+        color: #f2f7ff;
+        font: bold 1rem "Courier New", Courier, monospace;
+        letter-spacing: 0.04em;
+        touch-action: manipulation;
+        user-select: none;
+      }
+
+      .control-btn.accent {
+        background: linear-gradient(180deg, #2a5d8e 0%, #12304d 100%);
+      }
+
+      .control-btn.attack {
+        background: linear-gradient(180deg, #5d2f26 0%, #27161a 100%);
+        border-color: #93584c;
+      }
+
+      .control-btn.guard {
+        background: linear-gradient(180deg, #274f66 0%, #102431 100%);
+        border-color: #4f86a5;
+      }
+
+      .control-btn.special {
+        background: linear-gradient(180deg, #4b3d8f 0%, #1b1839 100%);
+        border-color: #7f7ef6;
+      }
+
+      .control-btn.utility {
+        min-height: 56px;
+        background: linear-gradient(180deg, #394360 0%, #131b2d 100%);
+      }
+
+      .control-btn.is-active {
+        transform: translateY(1px) scale(0.985);
+        border-color: #9fe8ff;
+        box-shadow: inset 0 0 0 2px rgba(159, 232, 255, 0.22);
+      }
+
+      @media (max-width: 900px), (pointer: coarse) {
+        #mobile-controls {
+          display: grid;
+        }
+      }
+
+      @media (max-width: 560px) {
+        body {
+          gap: 0.6rem;
+        }
+
+        #cabinet {
+          border-width: 6px;
+          border-radius: 14px;
+          padding: 0.55rem;
+        }
+
+        canvas {
+          border-width: 3px;
+          border-radius: 8px;
+        }
+
+        #mobile-controls {
+          padding: 0.65rem;
+          border-radius: 14px;
+        }
+
+        #mobile-clusters {
+          grid-template-columns: 1fr;
+        }
+
+        .control-btn {
+          min-height: 58px;
+          font-size: 0.95rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="cabinet">
+      <canvas id="game" width="960" height="540" aria-label="Tech Kombat game canvas"></canvas>
+    </main>
+    <section id="mobile-controls" aria-label="Touch controls">
+      <p id="mobile-hint">Pinch the page to zoom. Use the touch buttons below to fight on phones and tablets.</p>
+      <div id="mobile-clusters">
+        <div class="control-group" id="movement-group">
+          <button class="control-btn accent" data-codes="ArrowLeft" type="button">LEFT</button>
+          <button class="control-btn accent" data-codes="ArrowUp" type="button">JUMP</button>
+          <button class="control-btn accent" data-codes="ArrowRight" type="button">RIGHT</button>
+        </div>
+        <div class="control-group" id="action-group">
+          <button class="control-btn attack" data-codes="Space" type="button">PUNCH</button>
+          <button class="control-btn attack" data-codes="KeyA" type="button">KICK</button>
+          <button class="control-btn guard" data-codes="KeyB" type="button">BLOCK</button>
+          <button class="control-btn special" data-codes="Space,KeyA" type="button">SPECIAL</button>
+        </div>
+      </div>
+      <div class="control-group" id="utility-group">
+        <button class="control-btn utility" data-codes="Enter" type="button">START</button>
+        <button class="control-btn utility" data-codes="KeyF" type="button">FULL</button>
+      </div>
+    </section>
+    <script type="module" src="./game.js"></script>
+  </body>
+</html>

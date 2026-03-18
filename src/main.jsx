@@ -39,7 +39,7 @@ function AppProviders({ children }) {
   );
   const appIdentity = useMemo(
     () => ({
-      name: 'SeekerScan',
+      name: 'Seeker HQ',
       uri: typeof window === 'undefined' ? '' : window.location.origin,
       icon: typeof window === 'undefined' ? '' : new URL('/pwa-icon-192.png', window.location.origin).toString(),
     }),

@@ -33,14 +33,15 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'SeekerScan',
-        short_name: 'SeekerScan',
-        description: 'A dashboard for monitoring airdrop assets and earning rewards.',
-        theme_color: '#0A0B0D',
-        background_color: '#0A0B0D',
+        name: 'Seeker HQ',
+        short_name: 'SeekerHQ',
+        description: 'An all-in-one Seeker hub for gated access, rewards, and Tech Kombat on Solana Mobile.',
+        theme_color: '#040916',
+        background_color: '#040916',
         start_url: '.',
         scope: '.',
         display: 'standalone',
+        categories: ['finance', 'games', 'utilities'],
         icons: [
           {
             src: 'pwa-icon-192.png',
